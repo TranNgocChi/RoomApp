@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <Folder Include="Repository\Implements\" />
-    <Folder Include="Service\" />
+    <Folder Include="Service\Base\" />
+    <Folder Include="Service\Implements\" />
+    <Folder Include="Service\Interfaces\" />
   </ItemGroup>
 
 </Project>

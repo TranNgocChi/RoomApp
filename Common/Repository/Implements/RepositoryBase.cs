@@ -1,21 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserService.Common;
-using UserService.Database;
-using UserService.Repository.Intention;
 
-namespace UserService.Repository;
+namespace Common.Repository;
 
-public class RepositoryBase<T>(UserServiceContext _context) : IRepositoryBase<T> where T : class
+public class RepositoryBase<T>(BaseDbContext _context) : IRepositoryBase<T> where T : class
 {
     public virtual async Task<List<T>> GetAllAsync()
     {
         try
         {
-            return await _context.Set<T>().ToListAsync(); 
+            return await _context.Set<T>().ToListAsync();
         }
         catch (Exception ex)
         {
-            throw new Common.IOException("Error occurred while retrieving data.", ex);
+            throw new IOException("Error occurred while retrieving data.", ex);
         }
     }
 
@@ -26,12 +23,12 @@ public class RepositoryBase<T>(UserServiceContext _context) : IRepositoryBase<T>
             var entity = await _context.Set<T>().FindAsync(id) ??
                 throw new ObjectNotFoundException($"Entity of type {typeof(T).Name} " +
                 $"with ID {id} not found.");
-            
-            return entity;
+
+            return entity ?? null;
         }
         catch (Exception ex)
         {
-            throw new Common.IOException("Error occurred while retrieving data by ID.", ex);
+            throw new IOException("Error occurred while retrieving data by ID.", ex);
         }
     }
 
@@ -43,13 +40,13 @@ public class RepositoryBase<T>(UserServiceContext _context) : IRepositoryBase<T>
             await _context.SaveChangesAsync();
             return entity;
         }
-        catch (Common.DbUpdateException ex)
+        catch (DbUpdateException ex)
         {
-            throw new Common.DbUpdateException("Error occurred while creating entity.", ex);
+            throw new DbUpdateException("Error occurred while creating entity.", ex);
         }
         catch (Exception ex)
         {
-            throw new Common.IOException("Error occurred while creating entity.", ex);
+            throw new IOException("Error occurred while creating entity.", ex);
         }
     }
 
@@ -67,11 +64,11 @@ public class RepositoryBase<T>(UserServiceContext _context) : IRepositoryBase<T>
         }
         catch (DbUpdateConcurrencyException ex)
         {
-            throw new Common.InvalidOperationException("Concurrency error occurred while updating entity.", ex);
+            throw new InvalidOperationException("Concurrency error occurred while updating entity.", ex);
         }
         catch (Exception ex)
         {
-            throw new Common.IOException("Error occurred while updating entity.", ex);
+            throw new IOException("Error occurred while updating entity.", ex);
         }
     }
 
@@ -87,13 +84,13 @@ public class RepositoryBase<T>(UserServiceContext _context) : IRepositoryBase<T>
                 Result = true
             };
         }
-        catch (Common.DbUpdateException ex)
+        catch (DbUpdateException ex)
         {
-            throw new Common.DbUpdateException("Error occurred while deleting entity.", ex);
+            throw new DbUpdateException("Error occurred while deleting entity.", ex);
         }
         catch (Exception ex)
         {
-            throw new Common.IOException("Error occurred while deleting entity.", ex);
+            throw new IOException("Error occurred while deleting entity.", ex);
         }
     }
 }

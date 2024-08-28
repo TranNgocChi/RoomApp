@@ -1,9 +1,9 @@
-﻿namespace Common.Repository;
+﻿namespace Common.Service;
 
-public interface IRepositoryBase<T> where T : class
+public interface IServiceBase<T> where T : class
 {
     Task<List<T>> GetAllAsync();
-    Task<T?> GetByIdAsync(object id);
+    Task<T?> GetByIdAsync(Guid id);
     Task<T?> CreateAsync(T entity);
     Task<OperationResult> UpdateAsync(T entity);
     Task<OperationResult> DeleteAsync(T entity);
